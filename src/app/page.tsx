@@ -1,7 +1,8 @@
+import { BASE_URL } from '@/constants/env-variables';
 import TaskDashboard from '../components/ui/TaskDashboard';
 
 export default async function Home() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/tasks`, {
+  const res = await fetch(`${BASE_URL}/api/tasks`, {
     cache: 'no-store',
   });
   const tasks = await res.json();
