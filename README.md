@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Dashboard
 
-## Getting Started
+A modern, performant, and accessible task management dashboard built with Next.js, React, Zustand, Tailwind CSS, and TypeScript.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- CRUD operations for tasks
+- Categories/tags with color coding
+- Bulk operations (select, delete, status change)
+- Task search and filtering
+- Priority indicators
+- Local storage persistence
+- CSV export
+- Undo/redo
+- Drag-and-drop (optional)
+- Keyboard shortcuts
+- Toast notifications
+- Light/dark theme toggle
+- Responsive design
+- Lazy loading of task cards (Intersection Observer)
+- Code quality enforced with ESLint, Prettier, and Husky
+
+## 🛠️ Setup Instructions
+
+### Prerequisites
+
+- Node.js >= 18
+- npm >= 9
+
+### Installation
+
+```sh
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running the App
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Linting & Formatting
 
-## Learn More
+```sh
+npm run lint
+npm run format
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Running Unit Tests
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run test
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Running E2E Tests
 
-## Deploy on Vercel
+```sh
+npm run e2e
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Build for Production
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+npm run build
+```
+
+## 🧩 Component Documentation & Key Decisions
+
+- **Component composition:** All UI primitives are in `src/components/ui/` and reused throughout the app.
+- **Custom hooks:** Used for tasks (`useTasks`), undo/redo, lazy loading (`useInView`), etc.
+- **State management:** Zustand for global state, React state for local UI.
+- **Styling:** Tailwind CSS v4 for utility-first, responsive design.
+- **Lazy loading:** Intersection Observer API for efficient rendering of large lists.
+- **Error handling:** Toast notifications and error states in UI.
+
+## 🏗️ Architecture Decisions & Trade-offs
+
+- **No backend:** Uses local JSON file for persistence (can be swapped for a real API).
+- **Zustand vs Redux:** Chose Zustand for simplicity and performance.
+- **Intersection Observer vs react-window:** Native API for lazy loading, no extra dependencies.
+- **Husky/Prettier/ESLint:** Enforced code quality and style on every commit.
+
+## ⚡ Performance Considerations
+
+- **Lazy rendering:** Only visible task cards are rendered.
+- **Memoization:** useMemo and useCallback used for expensive computations and handlers.
+- **Pre-commit hooks:** Prevent slow or broken code from being committed.
+
+## ♿ Accessibility
+
+- All interactive elements have `aria-label`s.
+- Keyboard navigation is supported.
+- Color contrast and focus states are tested.
+- (Bonus) Run `npx axe` or Lighthouse for accessibility audits.
+
+## 📱 Mobile Responsiveness
+
+- Fully responsive grid and modals.
+- Tested on Chrome DevTools, iOS, and Android.
+
+## 🧪 Unit Tests (Example)
+
+- See `src/components/ui/__tests__/TaskCard.test.tsx` for a sample test.
+
+## 🧪 E2E Tests (Example)
+
+- See `e2e/add-task.spec.ts` for a sample Cypress test.
+
+---
+
+## 📂 File Structure
+
+```
+src/
+  components/
+    ui/
+      ...
+    task-form.tsx
+    task-card.tsx
+    task-list.tsx
+  hooks/
+  types/
+  utils/
+  constants/
+  app/
+```
+
+---
+
+## 📝 License
+
+MIT
