@@ -1,0 +1,32 @@
+#!/bin/sh
+# Get staged files (excluding deleted ones)
+stagedFiles=$(git diff --diff-filter=d --cached --name-only -- '*.js' '*.ts' '*.tsx' '*.json' '*.md' '*.css' '*.scss')
+
+# Get files changed in the last commit
+lastCommitFiles=$(git diff --diff-filter=d --name-only HEAD~1 HEAD -- '*.js' '*.ts' '*.tsx' '*.json' '*.md' '*.css' '*.scss')
+
+# Merge both lists and remove duplicates
+changedFiles=$(echo "$stagedFiles $lastCommitFiles" | tr ' ' '\n' | sort -u)
+
+if [ -z "$changedFiles" ]; then
+  echo "✅ No relevant files changed. Skipping linting & formatting."
+  exit 0
+fi
+
+echo "🔍 Checking files changed in the last commit and currently staged:"
+echo "$changedFiles"
+
+echo "✨ Running Prettier..."
+echo "$changedFiles" | xargs npx prettier --write
+echo "✅ Prettier formatting complete."
+
+echo "🚀 Running ESLint..."
+echo "$changedFiles" | xargs npx eslint --fix
+echo "✅ ESLint checks complete."
+
+# Re-stage fixed files
+echo "📌 Re-staging fixed files..."
+echo "$changedFiles" | xargs git add
+echo "✅ All fixes applied and staged."
+
+echo "🎉 Pre-commit checks passed! Proceeding with commit."
