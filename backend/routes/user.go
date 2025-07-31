@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/abolfazlcodes/task-dashboard/backend/models"
+	"github.com/abolfazlcodes/task-dashboard/backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -63,10 +64,22 @@ func signUpUser(context *gin.Context) {
 		return
 	}
 
+	token, err := utils.GenerateToken(user.Email, user.ID)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not authenticate user. Please try again later.",
+		})
+		return
+	}
+
 	context.JSON(http.StatusCreated, gin.H{
 		"message": "User was successfully created!",
-		"token":   "sample_token",
+		"token":   token,
 	})
 
-	// continues
+}
+
+func login(context *gin.Context) {
+
 }
