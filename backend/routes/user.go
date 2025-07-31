@@ -64,6 +64,15 @@ func signUpUser(context *gin.Context) {
 		return
 	}
 
+	// save the user in db
+	err = user.Save()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Something went wrong. Please try again later.",
+		})
+	}
+
 	token, err := utils.GenerateToken(user.Email, user.ID)
 
 	if err != nil {
