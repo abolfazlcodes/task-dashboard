@@ -2,9 +2,9 @@ package models
 
 type User struct {
 	ID        int64
-	FirstName string `binding:"required"`
-	LastName  string `binding:"required"`
-	UserName  string `binding:"username"`
-	Email     string `binding:"required"`
-	Password  string `binding:"required"`
+	FirstName string `json:"first_name" binding:"required,min=3"`
+	LastName  string `json:"last_name" binding:"required,min=3"`
+	UserName  string `json:"username"`
+	Email     string `json:"email" binding:"required,email"`
+	Password  string `json:"password" binding:"required,min=6"`
 }
