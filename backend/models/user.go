@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/abolfazlcodes/task-dashboard/backend/db"
 	"github.com/abolfazlcodes/task-dashboard/backend/utils"
 )
@@ -12,6 +14,12 @@ type User struct {
 	UserName  string `json:"username"`
 	Email     string `json:"email" binding:"required,email"`
 	Password  string `json:"password" binding:"required,min=6"`
+}
+
+type LoginUser struct {
+	ID       int64
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=6"`
 }
 
 func (user User) Save() error {
@@ -45,6 +53,28 @@ func (user User) Save() error {
 	}
 	// set the user id to the id created by DB
 	user.ID = userId
+
+	return nil
+}
+
+func (user LoginUser) ValidateCredentials() error {
+	query := `SELECT id, password FROM users WHERE email = ?`
+
+	row := db.DB.QueryRow(query, user.Email)
+
+	var retrievedUserPassword string
+	err := row.Scan(&user.ID, &retrievedUserPassword)
+
+	if err != nil {
+		return errors.New("Invalid email or password.")
+	}
+
+	// check if the password is valid
+	isPasswordValid := utils.CheckPasswordHash(user.Password, retrievedUserPassword)
+
+	if !isPasswordValid {
+		return errors.New("Invalid email or password!")
+	}
 
 	return nil
 }

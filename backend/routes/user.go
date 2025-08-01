@@ -90,5 +90,78 @@ func signUpUser(context *gin.Context) {
 }
 
 func login(context *gin.Context) {
+	var user models.LoginUser
 
+	err := context.ShouldBindJSON(&user)
+
+	if err != nil {
+		var validationErrors validator.ValidationErrors
+
+		if errors.As(err, &validationErrors) {
+			errorsOutput := make(map[string]string)
+
+			reflected := reflect.TypeOf(user)
+
+			for _, fe := range validationErrors {
+				field, ok := reflected.FieldByName(fe.StructField())
+
+				if !ok {
+					continue
+				}
+
+				jsonTag := field.Tag.Get("json")
+				fieldName := strings.Split(jsonTag, ",")[0] // delete other setting like: "first_name,omitempty"
+
+				switch fe.Tag() {
+				case "required":
+					errorsOutput[strings.ToLower(fieldName)] = fmt.Sprintf("%s is required", fieldName)
+				case "min":
+					errorsOutput[strings.ToLower(fieldName)] = fmt.Sprintf("%s must be at least %s characters", fieldName, fe.Param())
+				case "email":
+					errorsOutput[strings.ToLower(fieldName)] = "Invalid email format."
+				default:
+					errorsOutput[strings.ToLower(fieldName)] = fmt.Sprintf("%s is not valid", fieldName)
+				}
+			}
+
+			context.JSON(http.StatusBadRequest, gin.H{
+				"message": "Request validation errors.",
+				"errors":  errorsOutput,
+			})
+
+			return
+		}
+
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "Wrong format. Could not parse the request.",
+			"error":   err,
+		})
+		return
+	}
+
+	// validate users credentials
+	err = user.ValidateCredentials()
+
+	if err != nil {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	// log the user and give the token
+	token, err := utils.GenerateToken(user.Email, user.ID)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not authenticate the user.",
+		})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Logged in successfully.",
+		"token":   token,
+	})
 }
