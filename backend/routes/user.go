@@ -165,3 +165,37 @@ func login(context *gin.Context) {
 		"token":   token,
 	})
 }
+
+func deleteUserAccount(context *gin.Context) {
+	userId, err := utils.ConvertStringToInt(context.Param("id"))
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "Could not parse user id.",
+		})
+		return
+	}
+
+	user, err := models.GetUser(*userId) // dereferencing the id
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not find the user.",
+		})
+		return
+	}
+
+	// delete the user:
+	err = user.Delete()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not delete user. Try Again.",
+		})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "deleted successfully",
+	})
+}
