@@ -78,3 +78,32 @@ func (user LoginUser) ValidateCredentials() error {
 
 	return nil
 }
+
+func (user User) Delete() error {
+	query := "DELETE FROM users WHERE id = ?"
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user.ID)
+	return err
+}
+
+func GetUser(userId int64) (*User, error) {
+	query := `SELECT * FROM users WHERE id = ?`
+	row := db.DB.QueryRow(query, userId)
+
+	var user User
+
+	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Password, &user.UserName, &user.Email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
