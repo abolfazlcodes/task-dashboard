@@ -13,4 +13,7 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticatedRoutes := server.Group("/")
 	authenticatedRoutes.Use(middlewares.Authenticate)
 	authenticatedRoutes.DELETE("/user/:id", deleteUserAccount)
+
+	// categories routes - it needs token
+	authenticatedRoutes.POST("/category", createCategory)
 }
