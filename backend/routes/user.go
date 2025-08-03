@@ -71,6 +71,7 @@ func signUpUser(context *gin.Context) {
 		context.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Something went wrong. Please try again later.",
 		})
+		return
 	}
 
 	token, err := utils.GenerateToken(user.Email, user.ID)

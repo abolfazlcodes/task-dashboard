@@ -42,4 +42,19 @@ func createTables() {
 	if err != nil {
 		panic(fmt.Sprintf("Could not create users table %v", err))
 	}
+
+	createCategoriesTable := `
+		CREATE TABLE IF NOT EXISTS categories (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			title VARCHAR(40) UNIQUE NOT NULL,
+			description VARCHAR(40)
+		)
+	`
+
+	_, err = DB.Exec(createCategoriesTable)
+
+	if err != nil {
+		panic(fmt.Sprintf("Could not create categories table %v", err))
+	}
+
 }
