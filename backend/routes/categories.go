@@ -63,6 +63,17 @@ func createCategory(context *gin.Context) {
 		return
 	}
 
+	// save the category in db
+
+	err = category.Save()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not create the category",
+		})
+		return
+	}
+
 	context.JSON(http.StatusOK, gin.H{
 		"message": "Category was created successfully!",
 	})

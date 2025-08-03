@@ -46,8 +46,8 @@ func createTables() {
 	createCategoriesTable := `
 		CREATE TABLE IF NOT EXISTS categories (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			title VARCHAR(40) NOT NULL,
-			description VARCHAR(40) NOT NULL
+			title VARCHAR(40) UNIQUE NOT NULL,
+			description VARCHAR(40)
 		)
 	`
 
