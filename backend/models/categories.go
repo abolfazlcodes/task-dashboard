@@ -50,6 +50,22 @@ func (category Category) Delete() error {
 	return nil
 }
 
+func (category Category) Update() error {
+	query := `UPDATE categories SET title = ?, description = ? WHERE id = ?`
+
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(category.Title, category.Description, category.ID)
+
+	return err
+}
+
 func GetCategory(id int64) (*Category, error) {
 	query := `SELECT * FROM categories WHERE id = ?`
 

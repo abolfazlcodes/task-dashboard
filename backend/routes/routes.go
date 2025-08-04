@@ -16,5 +16,6 @@ func RegisterRoutes(server *gin.Engine) {
 
 	// categories routes - it needs token
 	authenticatedRoutes.POST("/category", createCategory)
+	authenticatedRoutes.PUT("/category/:id", updateCategory)
 	authenticatedRoutes.DELETE("/category/:id", deleteCategory)
 }
