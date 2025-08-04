@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/abolfazlcodes/task-dashboard/backend/models"
+	"github.com/abolfazlcodes/task-dashboard/backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -76,5 +77,42 @@ func createCategory(context *gin.Context) {
 
 	context.JSON(http.StatusOK, gin.H{
 		"message": "Category was created successfully!",
+	})
+}
+
+func deleteCategory(context *gin.Context) {
+	categoryId, err := utils.ConvertStringToInt(context.Param("id"))
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "Category id could not be parsed.",
+		})
+
+		return
+	}
+
+	// get the category
+	category, err := models.GetCategory(*categoryId)
+
+	if err != nil {
+		context.JSON(http.StatusNotFound, gin.H{
+			"message": "No category was found!",
+		})
+
+		return
+	}
+
+	// delete the category
+	err = category.Delete()
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "Could not delete the category",
+		})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Category was deleted successfully!",
 	})
 }
