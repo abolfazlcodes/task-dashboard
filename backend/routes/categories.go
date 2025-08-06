@@ -115,3 +115,25 @@ func deleteCategory(context *gin.Context) {
 		"message": "Category was deleted successfully!",
 	})
 }
+
+func getCategories(context *gin.Context) {
+	categories, err := models.GetAllCategories()
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "Could not get all categories",
+			"error":   err,
+		})
+		return
+	}
+
+	// format the response of the list
+	options := utils.FormatOptionsList(categories, func(c models.Category) int64 { return c.ID },
+		func(c models.Category) string { return c.Title },
+		func(c models.Category) string { return c.Description })
+
+	context.JSON(http.StatusOK, gin.H{
+		"message":    "Fetching all categories successfully",
+		"categories": options,
+	})
+}

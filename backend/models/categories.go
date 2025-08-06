@@ -82,3 +82,31 @@ func GetCategory(id int64) (*Category, error) {
 	return &category, nil
 
 }
+
+func GetAllCategories() ([]Category, error) {
+	query := "SELECT * FROM categories"
+
+	rows, err := db.DB.Query(query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var allCategories []Category
+
+	for rows.Next() {
+		var category Category
+
+		err := rows.Scan(&category.ID, &category.Title, &category.Description)
+
+		if err != nil {
+			return nil, err
+		}
+
+		allCategories = append(allCategories, category)
+	}
+
+	return allCategories, nil
+}
