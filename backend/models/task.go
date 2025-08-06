@@ -22,12 +22,12 @@ const (
 
 type Task struct {
 	ID           int64
-	Title        string    `binding:"title"`
-	Description  string    `binding:"description"`
-	Priority     Priority  `binding:"priority"`
-	Status       Status    `binding:"status"`
-	CreateAt     time.Time `binding:"created_at"`
-	UpdatedAt    time.Time `binding:"updated_at"`
-	DueDate      time.Time `binding:"due_date"`
-	AssigneesIDs []int64   `binding:"assignees_ids"` // better to tell AssigneesIDs as we only get ids
+	Title        string    `json:"title" binding:"required,min=3"`
+	Description  string    `json:"description"`
+	Priority     Priority  `json:"priority" binding:"required"`
+	Status       Status    `json:"status" binding:"required"`
+	CreateAt     time.Time `json:"create_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	DueDate      time.Time `json:"due_date" binding:"required"`
+	AssigneesIDs []int64   `json:"assignees_ids" binding:"required"` // better to tell AssigneesIDs as we only get ids
 }
