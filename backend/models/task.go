@@ -29,5 +29,6 @@ type Task struct {
 	CreateAt     time.Time `json:"create_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	DueDate      time.Time `json:"due_date" binding:"required"`
+	CategoryID   int64     `json:"category_id"`
 	AssigneesIDs []int64   `json:"assignees_ids" binding:"required"` // better to tell AssigneesIDs as we only get ids
 }
