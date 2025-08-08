@@ -107,3 +107,32 @@ func GetUser(userId int64) (*User, error) {
 
 	return &user, nil
 }
+
+func GetUsers() ([]User, error) {
+	// we should query just the fields we want from the db
+	query := `SELECT id, first_name, last_name, username FROM users`
+
+	rows, err := db.DB.Query(query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// close the rows query
+	defer rows.Close()
+
+	var allUsersList []User
+
+	for rows.Next() {
+		var userItem User
+
+		err = rows.Scan(&userItem.ID, &userItem.UserName, &userItem.FirstName, &userItem.LastName)
+
+		if err != nil {
+			return nil, err
+		}
+
+		allUsersList = append(allUsersList, userItem)
+	}
+	return allUsersList, nil
+}

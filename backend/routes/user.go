@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/abolfazlcodes/task-dashboard/backend/models"
@@ -48,6 +49,9 @@ func login(context *gin.Context) {
 	err := context.ShouldBindJSON(&user)
 
 	if utils.CheckValidationErrors(context, err, user) {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
 		return
 	}
 
@@ -110,4 +114,33 @@ func deleteUserAccount(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{
 		"message": "deleted successfully",
 	})
+}
+
+func getUsers(context *gin.Context) {
+	usersList, err := models.GetUsers()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not get users list.",
+			"error":   err,
+		})
+
+		return
+	}
+
+	// format users options
+
+	options := utils.FormatOptionsList(usersList, func(u models.User) int64 {
+		return u.ID
+	}, func(u models.User) string {
+		return fmt.Sprintf("%v %v", u.FirstName, u.LastName)
+	}, func(u models.User) string {
+		return u.UserName
+	})
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Fetch users list was successful.",
+		"data":    options,
+	})
+
 }
