@@ -12,6 +12,10 @@ import (
 )
 
 func CheckValidationErrors(context *gin.Context, err error, model interface{}) bool {
+	if err == nil {
+		return false
+	}
+
 	var validationErrors validator.ValidationErrors
 
 	if errors.As(err, &validationErrors) {
@@ -52,5 +56,5 @@ func CheckValidationErrors(context *gin.Context, err error, model interface{}) b
 	context.JSON(http.StatusBadRequest, gin.H{
 		"message": "Invalid request body.",
 	})
-	return false
+	return true
 }
