@@ -26,4 +26,7 @@ func RegisterRoutes(server *gin.Engine) {
 	// common routes
 	authenticatedRoutes.GET("/status-options", getStatusOptions)
 	authenticatedRoutes.GET("/priority-options", getPriorityOptions)
+
+	// task routes
+	authenticatedRoutes.POST("task", createTask)
 }

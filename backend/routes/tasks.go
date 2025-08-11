@@ -2,10 +2,40 @@ package routes
 
 import (
 	"net/http"
+	"time"
 
+	"github.com/abolfazlcodes/task-dashboard/backend/models"
 	"github.com/abolfazlcodes/task-dashboard/backend/utils"
 	"github.com/gin-gonic/gin"
 )
+
+func createTask(context *gin.Context) {
+	var task models.Task
+
+	err := context.ShouldBindJSON(&task)
+
+	if utils.CheckValidationErrors(context, err, task) {
+
+		return
+	}
+
+	task.CreatedAt = time.Now()
+	task.UpdatedAt = time.Now()
+
+	err = task.Save()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not create task.",
+		})
+
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Task created successfully",
+	})
+}
 
 func getStatusOptions(context *gin.Context) {
 	statusOptions := []utils.Option{

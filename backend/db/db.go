@@ -62,7 +62,7 @@ func createTables() {
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			title VARCHAR(40) NOT NULL,
 			description VARCHAR(250),
-			create_at DATE DEFAULT CURRENT_TIMESTAMP,
+			created_at DATE DEFAULT CURRENT_TIMESTAMP,
 			updated_at DATE DEFAULT CURRENT_TIMESTAMP,
 			due_date DATE NOT NULL,
 			priority TEXT NOT NULL CHECK(priority IN ('low', 'medium', 'high')),
